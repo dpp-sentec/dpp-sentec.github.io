@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Sentec Booking Widget — Integration Test</title>
+
+  <!-- ============================================================= -->
+  <!-- 1) WIDGET CONFIG  (your snippet — kept exactly as provided)   -->
+  <!--    The only change: onSearch also pipes the payload into the  -->
+  <!--    QA harness before redirecting, so you can inspect it.      -->
+  <!-- ============================================================= -->
+  <script>
+    window.$sentec = {
+      bookingWidgetConfig: {
+        propertyId: "UWZH7EJUSWF84Y",
+        apiBaseUrl: "https://api.d313ummlccof4f.cloudfront.net/sm/property/{propertyId}",
+        disablePropertyQueryParams: true,
+        layout: "horizontal",
+        primaryColor: "#357a2a",
+        ctaText: "Let's Book Now",
+        hidePromoCode: true,
+        currency: "IDR",
+        onSearch: function (params, context) {
+          // --- QA harness hook (remove for production) ---
+          if (window.__qa) window.__qa.logSearch(params, context);
+          if (window.__qa && window.__qa.inspectMode) return; // hold redirect while inspecting
+          // -----------------------------------------------
+          context.redirect();
+        },
+      },
+    };
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --ink: #10201b;
+      --muted: #5f7268;
+      --canvas: #e9ede9;
+      --surface: #ffffff;
+      --line: #d3dad4;
+      --brand: #357a2a;         /* matches widget primaryColor */
+      --brand-soft: #e5f0e2;
+      --amber: #a35a10;
+      --amber-soft: #fbeedd;
+      --radius: 10px;
+      --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+      --sans: "Inter", system-ui, -apple-system, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--canvas);
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px 20px 72px;
+    }
+
+    /* ---- header ---- */
+    header { margin-bottom: 24px; }
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .live-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--brand);
+      box-shadow: 0 0 0 0 rgba(53,122,42,0.5);
+      animation: pulse 2.2s infinite;
+    }
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(53,122,42,0.45); }
+      70%  { box-shadow: 0 0 0 7px rgba(53,122,42,0); }
+      100% { box-shadow: 0 0 0 0 rgba(53,122,42,0); }
+    }
+    h1 {
+      font-size: 26px;
+      font-weight: 600;
+      margin: 10px 0 4px;
+      letter-spacing: -0.01em;
+    }
+    .sub { color: var(--muted); font-size: 14px; margin: 0; }
+
+    /* ---- status chips ---- */
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 20px 0 26px;
+    }
+    .chip {
+      font-family: var(--mono);
+      font-size: 12px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 5px 11px;
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .chip b { color: var(--muted); font-weight: 500; }
+    .chip .swatch {
+      width: 11px; height: 11px; border-radius: 3px;
+      border: 1px solid rgba(0,0,0,0.12);
+    }
+
+    /* ---- cards ---- */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .card + .card { margin-top: 20px; }
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .card-head h2 {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+      margin: 0;
+    }
+    .card-body { padding: 22px 18px; }
+
+    /* widget host — give the widget room, no styling that fights it */
+    #sentec-booking-widget { min-height: 60px; }
+
+    /* ---- inspect toggle ---- */
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-family: var(--mono);
+      cursor: pointer;
+      user-select: none;
+      color: var(--muted);
+    }
+    .switch {
+      width: 34px; height: 19px; border-radius: 999px;
+      background: var(--line); position: relative; transition: background .18s;
+    }
+    .switch::after {
+      content: ""; position: absolute; top: 2px; left: 2px;
+      width: 15px; height: 15px; border-radius: 50%;
+      background: #fff; transition: transform .18s;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+    .toggle input { display: none; }
+    .toggle input:checked + .switch { background: var(--amber); }
+    .toggle input:checked + .switch::after { transform: translateX(15px); }
+
+    .inspect-banner {
+      display: none;
+      background: var(--amber-soft);
+      color: var(--amber);
+      border-top: 1px solid var(--line);
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 9px 18px;
+    }
+    body.inspecting .inspect-banner { display: block; }
+
+    /* ---- config table ---- */
+    table.cfg { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 13px; }
+    table.cfg td { padding: 7px 0; border-bottom: 1px dashed var(--line); vertical-align: top; }
+    table.cfg tr:last-child td { border-bottom: none; }
+    table.cfg .k { color: var(--muted); width: 210px; padding-right: 16px; white-space: nowrap; }
+    table.cfg .v { color: var(--ink); word-break: break-all; }
+    .v .bool-true { color: var(--brand); }
+    .v .bool-false { color: var(--amber); }
+    .v .fn { color: var(--muted); font-style: italic; }
+
+    /* ---- event log ---- */
+    .log-empty {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--muted);
+      padding: 4px 0;
+    }
+    .log-entry {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      animation: slidein .22s ease;
+    }
+    @keyframes slidein { from { opacity: 0; transform: translateY(4px);} to {opacity:1; transform:none;} }
+    .log-meta {
+      display: flex; justify-content: space-between; gap: 10px;
+      background: var(--brand-soft);
+      padding: 7px 12px;
+      font-family: var(--mono); font-size: 11px; color: var(--brand);
+      letter-spacing: 0.04em;
+    }
+    .log-entry pre {
+      margin: 0; padding: 12px;
+      font-family: var(--mono); font-size: 12px; line-height: 1.55;
+      white-space: pre-wrap; word-break: break-word;
+    }
+    .clear-btn {
+      font-family: var(--mono); font-size: 11px;
+      background: none; border: 1px solid var(--line);
+      color: var(--muted); border-radius: 6px; padding: 4px 10px; cursor: pointer;
+    }
+    .clear-btn:hover { border-color: var(--muted); color: var(--ink); }
+
+    footer {
+      margin-top: 40px; font-family: var(--mono); font-size: 11px;
+      color: var(--muted); text-align: center; line-height: 1.7;
+    }
+    footer code { color: var(--ink); }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; }
+    }
+    @media (max-width: 560px) {
+      table.cfg .k { width: 130px; white-space: normal; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow"><span class="live-dot"></span> QA · Sentec Booking Engine</div>
+      <h1>Booking Widget — Integration Test</h1>
+      <p class="sub">Live embed of the backoffice-generated widget, with the active config and every <code style="font-family:var(--mono)">onSearch</code> payload captured for inspection.</p>
+    </header>
+
+    <div class="chips" id="statusChips"><!-- filled from live config --></div>
+
+    <!-- ============ WIDGET ============ -->
+    <section class="card">
+      <div class="card-head">
+        <h2>Widget</h2>
+        <label class="toggle" title="When on, onSearch is logged but the redirect is held so you can inspect the payload.">
+          <input type="checkbox" id="inspectToggle" />
+          <span class="switch"></span>
+          Inspect mode
+        </label>
+      </div>
+      <div class="card-body">
+        <!-- Widget mount point -->
+        <div id="sentec-booking-widget"></div>
+      </div>
+      <div class="inspect-banner">Inspect mode ON — search redirect is paused. Payload is logged below instead of navigating away.</div>
+    </section>
+
+    <!-- ============ ACTIVE CONFIG ============ -->
+    <section class="card">
+      <div class="card-head"><h2>Active config</h2></div>
+      <div class="card-body">
+        <table class="cfg"><tbody id="cfgTable"></tbody></table>
+      </div>
+    </section>
+
+    <!-- ============ EVENT LOG ============ -->
+    <section class="card">
+      <div class="card-head">
+        <h2>onSearch log <span id="logCount" style="color:var(--brand)"></span></h2>
+        <button class="clear-btn" id="clearLog">Clear</button>
+      </div>
+      <div class="card-body">
+        <div id="logList"><div class="log-empty">No searches yet. Fill the widget and hit "Let's Book Now".</div></div>
+      </div>
+    </section>
+
+    <footer>
+      Property <code>UWZH7EJUSWF84Y</code> · served from GitHub Pages<br />
+      This is a test page — <code>noindex</code>. Remove the QA harness hook in <code>onSearch</code> before shipping the snippet to production.
+    </footer>
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- QA HARNESS (safe to delete when copying the snippet to prod)  -->
+  <!-- ============================================================= -->
+  <script>
+    (function () {
+      var cfg = window.$sentec.bookingWidgetConfig;
+
+      // ---- render status chips ----
+      var chips = [
+        { k: "propertyId", v: cfg.propertyId },
+        { k: "layout", v: cfg.layout },
+        { k: "currency", v: cfg.currency },
+        { k: "primaryColor", v: cfg.primaryColor, swatch: true },
+        { k: "hidePromoCode", v: String(cfg.hidePromoCode) },
+      ];
+      document.getElementById("statusChips").innerHTML = chips.map(function (c) {
+        var sw = c.swatch ? '<span class="swatch" style="background:' + c.v + '"></span>' : "";
+        return '<span class="chip"><b>' + c.k + '</b>' + sw + c.v + '</span>';
+      }).join("");
+
+      // ---- render active config (reads the real object, incl. function) ----
+      var rows = "";
+      Object.keys(cfg).forEach(function (key) {
+        var raw = cfg[key], val;
+        if (typeof raw === "function") {
+          val = '<span class="fn">ƒ ' + key + '(params, context)</span>';
+        } else if (typeof raw === "boolean") {
+          val = '<span class="bool-' + raw + '">' + raw + '</span>';
+        } else {
+          val = String(raw);
+        }
+        rows += '<tr><td class="k">' + key + '</td><td class="v">' + val + '</td></tr>';
+      });
+      document.getElementById("cfgTable").innerHTML = rows;
+
+      // ---- inspect toggle ----
+      var inspectToggle = document.getElementById("inspectToggle");
+      inspectToggle.addEventListener("change", function () {
+        window.__qa.inspectMode = inspectToggle.checked;
+        document.body.classList.toggle("inspecting", inspectToggle.checked);
+      });
+
+      // ---- event log ----
+      var count = 0;
+      function safe(obj) {
+        try {
+          return JSON.stringify(obj, function (k, v) {
+            if (typeof v === "function") return "ƒ " + (v.name || "anonymous") + "()";
+            return v;
+          }, 2);
+        } catch (e) {
+          return "[unserializable] " + String(obj);
+        }
+      }
+
+      window.__qa = {
+        inspectMode: false,
+        logSearch: function (params, context) {
+          count++;
+          document.getElementById("logCount").textContent = "(" + count + ")";
+          var list = document.getElementById("logList");
+          if (list.querySelector(".log-empty")) list.innerHTML = "";
+
+          var ctxKeys = context ? Object.keys(context).filter(function (k) { return typeof context[k] === "function"; }) : [];
+          var el = document.createElement("div");
+          el.className = "log-entry";
+          el.innerHTML =
+            '<div class="log-meta"><span>#' + count + '</span><span>' + new Date().toLocaleTimeString() + '</span></div>' +
+            '<pre>params = ' + safe(params) +
+            '\n\ncontext methods = ' + safe(ctxKeys) + '</pre>';
+          list.insertBefore(el, list.firstChild);
+
+          console.log("[QA onSearch] params:", params, "context:", context);
+        },
+      };
+
+      document.getElementById("clearLog").addEventListener("click", function () {
+        count = 0;
+        document.getElementById("logCount").textContent = "";
+        document.getElementById("logList").innerHTML =
+          '<div class="log-empty">No searches yet. Fill the widget and hit "Let\'s Book Now".</div>';
+      });
+    })();
+  </script>
+
+  <!-- ============================================================= -->
+  <!-- 2) WIDGET LOADER  (your snippet — loads last, after the DOM)  -->
+  <!-- ============================================================= -->
+  <script src="https://files.booking.sentineltech.com/booking-widget/dist/latest/booking-widget.iife.js"></script>
+</body>
+</html>
