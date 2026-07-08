@@ -4,13 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex" />
-  <title>Sentec Booking Widget — Integration Test</title>
+  <title>Lorem Ipsum Hotel &amp; Resort — Book Your Stay</title>
 
-  <!-- ============================================================= -->
-  <!-- 1) WIDGET CONFIG  (your snippet — kept exactly as provided)   -->
-  <!--    The only change: onSearch also pipes the payload into the  -->
-  <!--    QA harness before redirecting, so you can inspect it.      -->
-  <!-- ============================================================= -->
+  <!-- ===================== WIDGET CONFIG (your snippet, unchanged) ===================== -->
   <script>
     window.$sentec = {
       bookingWidgetConfig: {
@@ -22,373 +18,143 @@
         ctaText: "Let's Book Now",
         hidePromoCode: true,
         currency: "IDR",
-        onSearch: function (params, context) {
-          // --- QA harness hook (remove for production) ---
-          if (window.__qa) window.__qa.logSearch(params, context);
-          if (window.__qa && window.__qa.inspectMode) return; // hold redirect while inspecting
-          // -----------------------------------------------
+        onSearch: function(params, context) {
           context.redirect();
         },
-      },
+      }
     };
   </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <style>
     :root {
-      --ink: #10201b;
-      --muted: #5f7268;
-      --canvas: #e9ede9;
-      --surface: #ffffff;
-      --line: #d3dad4;
-      --brand: #357a2a;         /* matches widget primaryColor */
-      --brand-soft: #e5f0e2;
-      --amber: #a35a10;
-      --amber-soft: #fbeedd;
-      --radius: 10px;
-      --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
-      --sans: "Inter", system-ui, -apple-system, sans-serif;
+      --forest: #1f3d24;
+      --brand:  #357a2a;
+      --sage:   #e7efe4;
+      --sand:   #f6f4ee;
+      --ink:    #21281f;
+      --muted:  #6b7566;
+      --line:   #e2e0d6;
+      --gold:   #b8894a;
+      --serif:  "Fraunces", Georgia, serif;
+      --sans:   "Inter", system-ui, -apple-system, sans-serif;
     }
-
     * { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--sans); color: var(--ink); background: var(--sand); line-height: 1.55; -webkit-font-smoothing: antialiased; }
 
-    body {
-      margin: 0;
-      background: var(--canvas);
-      color: var(--ink);
-      font-family: var(--sans);
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
+    /* ---------- hero ---------- */
+    .hero {
+      position: relative;
+      min-height: 48vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 64px 32px 140px;
+      color: #fff;
+      background:
+        linear-gradient(180deg, rgba(15,30,18,.55) 0%, rgba(15,30,18,.30) 45%, rgba(31,61,36,.85) 100%),
+        radial-gradient(1200px 600px at 75% 20%, #2f5e33 0%, transparent 60%),
+        linear-gradient(135deg, #16301c 0%, #24512b 55%, #3a6b3e 100%);
     }
+    .hero-inner { max-width: 1080px; margin: 0 auto; width: 100%; }
+    .eyebrow { font-size: 13px; letter-spacing: .22em; text-transform: uppercase; color: rgba(255,255,255,.8); margin-bottom: 14px; }
+    .stars { color: var(--gold); letter-spacing: 2px; }
+    h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(34px, 5.2vw, 60px); line-height: 1.03; margin: 0 0 14px; letter-spacing: -.01em; }
+    .hero p { max-width: 480px; font-size: 16px; color: rgba(255,255,255,.9); margin: 0; }
+    .loc { display: inline-flex; align-items: center; gap: 7px; font-size: 14px; margin-top: 16px; color: rgba(255,255,255,.85); }
 
-    .wrap {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 32px 20px 72px;
+    /* ---------- booking card w/ widget ---------- */
+    .booking {
+      max-width: 1080px;
+      margin: -110px auto 0;
+      position: relative; z-index: 4;
+      padding: 0 32px;
     }
-
-    /* ---- header ---- */
-    header { margin-bottom: 24px; }
-    .eyebrow {
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .live-dot {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: var(--brand);
-      box-shadow: 0 0 0 0 rgba(53,122,42,0.5);
-      animation: pulse 2.2s infinite;
-    }
-    @keyframes pulse {
-      0%   { box-shadow: 0 0 0 0 rgba(53,122,42,0.45); }
-      70%  { box-shadow: 0 0 0 7px rgba(53,122,42,0); }
-      100% { box-shadow: 0 0 0 0 rgba(53,122,42,0); }
-    }
-    h1 {
-      font-size: 26px;
-      font-weight: 600;
-      margin: 10px 0 4px;
-      letter-spacing: -0.01em;
-    }
-    .sub { color: var(--muted); font-size: 14px; margin: 0; }
-
-    /* ---- status chips ---- */
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 20px 0 26px;
-    }
-    .chip {
-      font-family: var(--mono);
-      font-size: 12px;
-      background: var(--surface);
+    .booking-card {
+      background: #fff;
       border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 5px 11px;
-      display: inline-flex;
-      gap: 6px;
-      align-items: center;
+      border-radius: 16px;
+      box-shadow: 0 24px 60px -30px rgba(20,40,22,.45);
+      padding: 26px 28px 30px;
     }
-    .chip b { color: var(--muted); font-weight: 500; }
-    .chip .swatch {
-      width: 11px; height: 11px; border-radius: 3px;
-      border: 1px solid rgba(0,0,0,0.12);
-    }
+    .booking-card h2 { font-family: var(--serif); font-weight: 500; font-size: 22px; margin: 0 0 4px; }
+    .booking-card .hint { font-size: 13px; color: var(--muted); margin: 0 0 20px; }
 
-    /* ---- cards ---- */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      overflow: hidden;
-    }
-    .card + .card { margin-top: 20px; }
-    .card-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--line);
-    }
-    .card-head h2 {
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      font-weight: 600;
-      margin: 0;
-    }
-    .card-body { padding: 22px 18px; }
+    /* widget mount — leave it room, don't fight its own styles */
+    #sentec-booking-widget { min-height: 64px; }
 
-    /* widget host — give the widget room, no styling that fights it */
-    #sentec-booking-widget { min-height: 60px; }
+    /* ---------- highlights ---------- */
+    .highlights {
+      max-width: 1080px; margin: 64px auto 0; padding: 0 32px;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px;
+    }
+    .hl .ico { width: 40px; height: 40px; border-radius: 10px; background: var(--sage); color: var(--brand); display: grid; place-items: center; font-size: 20px; margin-bottom: 12px; }
+    .hl h3 { font-family: var(--serif); font-weight: 500; font-size: 17px; margin: 0 0 4px; }
+    .hl p { font-size: 13px; color: var(--muted); margin: 0; }
 
-    /* ---- inspect toggle ---- */
-    .toggle {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      font-family: var(--mono);
-      cursor: pointer;
-      user-select: none;
-      color: var(--muted);
-    }
-    .switch {
-      width: 34px; height: 19px; border-radius: 999px;
-      background: var(--line); position: relative; transition: background .18s;
-    }
-    .switch::after {
-      content: ""; position: absolute; top: 2px; left: 2px;
-      width: 15px; height: 15px; border-radius: 50%;
-      background: #fff; transition: transform .18s;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-    }
-    .toggle input { display: none; }
-    .toggle input:checked + .switch { background: var(--amber); }
-    .toggle input:checked + .switch::after { transform: translateX(15px); }
+    /* ---------- about ---------- */
+    .about { max-width: 760px; margin: 72px auto 0; padding: 0 32px; text-align: center; }
+    .about .eyebrow { color: var(--brand); }
+    .about h2 { font-family: var(--serif); font-weight: 500; font-size: 30px; margin: 8px 0 14px; color: var(--forest); }
+    .about p { color: var(--muted); font-size: 16px; }
 
-    .inspect-banner {
-      display: none;
-      background: var(--amber-soft);
-      color: var(--amber);
-      border-top: 1px solid var(--line);
-      font-family: var(--mono);
-      font-size: 12px;
-      padding: 9px 18px;
-    }
-    body.inspecting .inspect-banner { display: block; }
-
-    /* ---- config table ---- */
-    table.cfg { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 13px; }
-    table.cfg td { padding: 7px 0; border-bottom: 1px dashed var(--line); vertical-align: top; }
-    table.cfg tr:last-child td { border-bottom: none; }
-    table.cfg .k { color: var(--muted); width: 210px; padding-right: 16px; white-space: nowrap; }
-    table.cfg .v { color: var(--ink); word-break: break-all; }
-    .v .bool-true { color: var(--brand); }
-    .v .bool-false { color: var(--amber); }
-    .v .fn { color: var(--muted); font-style: italic; }
-
-    /* ---- event log ---- */
-    .log-empty {
-      font-family: var(--mono);
-      font-size: 13px;
-      color: var(--muted);
-      padding: 4px 0;
-    }
-    .log-entry {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      margin-bottom: 10px;
-      overflow: hidden;
-      animation: slidein .22s ease;
-    }
-    @keyframes slidein { from { opacity: 0; transform: translateY(4px);} to {opacity:1; transform:none;} }
-    .log-meta {
-      display: flex; justify-content: space-between; gap: 10px;
-      background: var(--brand-soft);
-      padding: 7px 12px;
-      font-family: var(--mono); font-size: 11px; color: var(--brand);
-      letter-spacing: 0.04em;
-    }
-    .log-entry pre {
-      margin: 0; padding: 12px;
-      font-family: var(--mono); font-size: 12px; line-height: 1.55;
-      white-space: pre-wrap; word-break: break-word;
-    }
-    .clear-btn {
-      font-family: var(--mono); font-size: 11px;
-      background: none; border: 1px solid var(--line);
-      color: var(--muted); border-radius: 6px; padding: 4px 10px; cursor: pointer;
-    }
-    .clear-btn:hover { border-color: var(--muted); color: var(--ink); }
-
+    /* ---------- footer ---------- */
     footer {
-      margin-top: 40px; font-family: var(--mono); font-size: 11px;
-      color: var(--muted); text-align: center; line-height: 1.7;
+      margin-top: 80px; background: var(--forest); color: rgba(255,255,255,.75);
+      padding: 40px 32px; text-align: center; font-size: 13px;
     }
-    footer code { color: var(--ink); }
+    footer .brand { font-family: var(--serif); color: #fff; font-size: 20px; margin-bottom: 10px; }
+    footer .tiny { margin-top: 12px; font-size: 11px; color: rgba(255,255,255,.45); }
 
-    @media (prefers-reduced-motion: reduce) {
-      * { animation: none !important; }
-    }
-    @media (max-width: 560px) {
-      table.cfg .k { width: 130px; white-space: normal; }
+    @media (max-width: 820px) { .highlights { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 520px) {
+      .hero { padding: 56px 20px 130px; }
+      .booking, .highlights, .about { padding-left: 20px; padding-right: 20px; }
+      .highlights { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="eyebrow"><span class="live-dot"></span> QA · Sentec Booking Engine</div>
-      <h1>Booking Widget — Integration Test</h1>
-      <p class="sub">Live embed of the backoffice-generated widget, with the active config and every <code style="font-family:var(--mono)">onSearch</code> payload captured for inspection.</p>
-    </header>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow">Dolor Sit · Amet</div>
+      <div class="stars">★★★★★</div>
+      <h1>Lorem Ipsum<br />Hotel &amp; Resort</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      <div class="loc">◦ 123 Placeholder Street, Consectetur City</div>
+    </div>
+  </header>
 
-    <div class="chips" id="statusChips"><!-- filled from live config --></div>
+  <!-- ===== Booking widget lives here, as the site's search bar ===== -->
+  <section class="booking">
+    <div class="booking-card">
+      <h2>Check availability</h2>
+      <p class="hint">Select your dates to see live rates and reserve your stay.</p>
+      <div id="sentec-booking-widget"></div>
+    </div>
+  </section>
 
-    <!-- ============ WIDGET ============ -->
-    <section class="card">
-      <div class="card-head">
-        <h2>Widget</h2>
-        <label class="toggle" title="When on, onSearch is logged but the redirect is held so you can inspect the payload.">
-          <input type="checkbox" id="inspectToggle" />
-          <span class="switch"></span>
-          Inspect mode
-        </label>
-      </div>
-      <div class="card-body">
-        <!-- Widget mount point -->
-        <div id="sentec-booking-widget"></div>
-      </div>
-      <div class="inspect-banner">Inspect mode ON — search redirect is paused. Payload is logged below instead of navigating away.</div>
-    </section>
+  <section class="highlights">
+    <div class="hl"><div class="ico">❋</div><h3>Lorem ipsum</h3><p>Dolor sit amet consectetur adipiscing.</p></div>
+    <div class="hl"><div class="ico">❍</div><h3>Sed do eiusmod</h3><p>Tempor incididunt ut labore.</p></div>
+    <div class="hl"><div class="ico">❦</div><h3>Ut enim ad</h3><p>Minim veniam quis nostrud.</p></div>
+    <div class="hl"><div class="ico">✦</div><h3>Duis aute irure</h3><p>Dolor in reprehenderit voluptate.</p></div>
+  </section>
 
-    <!-- ============ ACTIVE CONFIG ============ -->
-    <section class="card">
-      <div class="card-head"><h2>Active config</h2></div>
-      <div class="card-body">
-        <table class="cfg"><tbody id="cfgTable"></tbody></table>
-      </div>
-    </section>
+  <section class="about">
+    <div class="eyebrow">Lorem ipsum</div>
+    <h2>Dolor sit amet consectetur</h2>
+    <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Ut enim ad minim veniam, quis nostrud exercitation.</p>
+  </section>
 
-    <!-- ============ EVENT LOG ============ -->
-    <section class="card">
-      <div class="card-head">
-        <h2>onSearch log <span id="logCount" style="color:var(--brand)"></span></h2>
-        <button class="clear-btn" id="clearLog">Clear</button>
-      </div>
-      <div class="card-body">
-        <div id="logList"><div class="log-empty">No searches yet. Fill the widget and hit "Let's Book Now".</div></div>
-      </div>
-    </section>
+  <footer>
+    <div class="brand">Lorem Ipsum<span style="color:var(--gold)">.</span></div>
+    <div>123 Placeholder Street, Consectetur City · +00 000 000 000</div>
+    <div class="tiny">Demo template for booking widget integration testing. Not a real property.</div>
+  </footer>
 
-    <footer>
-      Property <code>UWZH7EJUSWF84Y</code> · served from GitHub Pages<br />
-      This is a test page — <code>noindex</code>. Remove the QA harness hook in <code>onSearch</code> before shipping the snippet to production.
-    </footer>
-  </div>
-
-  <!-- ============================================================= -->
-  <!-- QA HARNESS (safe to delete when copying the snippet to prod)  -->
-  <!-- ============================================================= -->
-  <script>
-    (function () {
-      var cfg = window.$sentec.bookingWidgetConfig;
-
-      // ---- render status chips ----
-      var chips = [
-        { k: "propertyId", v: cfg.propertyId },
-        { k: "layout", v: cfg.layout },
-        { k: "currency", v: cfg.currency },
-        { k: "primaryColor", v: cfg.primaryColor, swatch: true },
-        { k: "hidePromoCode", v: String(cfg.hidePromoCode) },
-      ];
-      document.getElementById("statusChips").innerHTML = chips.map(function (c) {
-        var sw = c.swatch ? '<span class="swatch" style="background:' + c.v + '"></span>' : "";
-        return '<span class="chip"><b>' + c.k + '</b>' + sw + c.v + '</span>';
-      }).join("");
-
-      // ---- render active config (reads the real object, incl. function) ----
-      var rows = "";
-      Object.keys(cfg).forEach(function (key) {
-        var raw = cfg[key], val;
-        if (typeof raw === "function") {
-          val = '<span class="fn">ƒ ' + key + '(params, context)</span>';
-        } else if (typeof raw === "boolean") {
-          val = '<span class="bool-' + raw + '">' + raw + '</span>';
-        } else {
-          val = String(raw);
-        }
-        rows += '<tr><td class="k">' + key + '</td><td class="v">' + val + '</td></tr>';
-      });
-      document.getElementById("cfgTable").innerHTML = rows;
-
-      // ---- inspect toggle ----
-      var inspectToggle = document.getElementById("inspectToggle");
-      inspectToggle.addEventListener("change", function () {
-        window.__qa.inspectMode = inspectToggle.checked;
-        document.body.classList.toggle("inspecting", inspectToggle.checked);
-      });
-
-      // ---- event log ----
-      var count = 0;
-      function safe(obj) {
-        try {
-          return JSON.stringify(obj, function (k, v) {
-            if (typeof v === "function") return "ƒ " + (v.name || "anonymous") + "()";
-            return v;
-          }, 2);
-        } catch (e) {
-          return "[unserializable] " + String(obj);
-        }
-      }
-
-      window.__qa = {
-        inspectMode: false,
-        logSearch: function (params, context) {
-          count++;
-          document.getElementById("logCount").textContent = "(" + count + ")";
-          var list = document.getElementById("logList");
-          if (list.querySelector(".log-empty")) list.innerHTML = "";
-
-          var ctxKeys = context ? Object.keys(context).filter(function (k) { return typeof context[k] === "function"; }) : [];
-          var el = document.createElement("div");
-          el.className = "log-entry";
-          el.innerHTML =
-            '<div class="log-meta"><span>#' + count + '</span><span>' + new Date().toLocaleTimeString() + '</span></div>' +
-            '<pre>params = ' + safe(params) +
-            '\n\ncontext methods = ' + safe(ctxKeys) + '</pre>';
-          list.insertBefore(el, list.firstChild);
-
-          console.log("[QA onSearch] params:", params, "context:", context);
-        },
-      };
-
-      document.getElementById("clearLog").addEventListener("click", function () {
-        count = 0;
-        document.getElementById("logCount").textContent = "";
-        document.getElementById("logList").innerHTML =
-          '<div class="log-empty">No searches yet. Fill the widget and hit "Let\'s Book Now".</div>';
-      });
-    })();
-  </script>
-
-  <!-- ============================================================= -->
-  <!-- 2) WIDGET LOADER  (your snippet — loads last, after the DOM)  -->
-  <!-- ============================================================= -->
+  <!-- ===================== WIDGET LOADER (your snippet, unchanged) ===================== -->
   <script src="https://files.booking.sentineltech.com/booking-widget/dist/latest/booking-widget.iife.js"></script>
 </body>
 </html>
