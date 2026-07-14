@@ -7,23 +7,24 @@
   <title>Lorem Ipsum Hotel &amp; Resort — Book Your Stay</title>
 
   <!-- ===================== WIDGET CONFIG (your snippet, unchanged) ===================== -->
-  <script>
-    window.$sentec = {
-      bookingWidgetConfig: {
-        propertyId: "UWZH7EJUSWF84Y",
-        apiBaseUrl: "https://api.d313ummlccof4f.cloudfront.net/sm/property/{propertyId}",
-        disablePropertyQueryParams: true,
-        layout: "horizontal",
-        primaryColor: "#357a2a",
-        ctaText: "Let's Book Now",
-        hidePromoCode: true,
-        currency: "IDR",
-        onSearch: function(params, context) {
-          context.redirect();
-        },
-      }
-    };
-  </script>
+<script>
+  window.$sentec = {
+    bookingWidgetConfig: {
+      propertyId: "UWZH7EJUSWF84Y",
+      apiBaseUrl: "https://dev.api.booking.sentec.io/sm/property/{propertyId}",
+      disablePropertyQueryParams: true,
+      layout: "horizontal",
+      primaryColor: "#ff00c5",
+      ctaText: "Let's Booking with Us",
+      hidePromoCode: true,
+      hideAddRoomButton: true,
+      currency: "IDR",
+      onSearch: function(params, context) {
+        context.redirect("https://d313ummlccof4f.cloudfront.net");
+      },
+    }
+  };
+</script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
