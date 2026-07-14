@@ -13,11 +13,12 @@
       propertyId: "UWZH7EJUSWF84Y",
       apiBaseUrl: "https://dev.api.booking.sentec.io/sm/property/{propertyId}",
       disablePropertyQueryParams: true,
-      primaryColor: "#e40808",
-      ctaText: "Let's Booking with Us",
+      layout: "horizontal",
+      primaryColor: "#004fff",
+      ctaText: "Let's Booking with Us..",
       currency: "IDR",
       onSearch: function(params, context) {
-        context.redirect();
+        context.redirect("https://dev.booking.sentec.io/hotel/UWZH7EJUSWF84Y/");
       },
     }
   };
