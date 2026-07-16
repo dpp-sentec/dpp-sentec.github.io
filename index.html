@@ -6,6 +6,24 @@
   <meta name="robots" content="noindex" />
   <title>Lorem Ipsum Hotel &amp; Resort — Book Your Stay</title>
 
+  <!-- ===================== WIDGET CONFIG (your snippet, unchanged) ===================== -->
+<script>
+  window.$sentec = {
+    bookingWidgetConfig: {
+      propertyId: "UWZH7EJUSWF84Y",
+      apiBaseUrl: "https://dev.api.booking.sentec.io/sm/property/{propertyId}",
+      disablePropertyQueryParams: true,
+      layout: "horizontal",
+      primaryColor: "#959700",
+      ctaText: "Booking with Us",
+      currency: "IDR",
+      onSearch: function(params, context) {
+        context.redirect("https://dev.booking.sentec.io/hotel/UWZH7EJUSWF84Y/rooms");
+      },
+    }
+  };
+</script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -13,8 +31,7 @@
   <style>
     :root {
       --forest: #1f3d24;
-      --brand:  #357a2a;   /* DEV env color */
-      --slate:  #373b44;   /* STAGING env color */
+      --brand:  #357a2a;
       --sage:   #e7efe4;
       --sand:   #f6f4ee;
       --ink:    #21281f;
@@ -30,9 +47,9 @@
     /* ---------- hero ---------- */
     .hero {
       position: relative;
-      min-height: 40vh;
+      min-height: 48vh;
       display: flex; flex-direction: column; justify-content: center;
-      padding: 60px 32px 120px;
+      padding: 64px 32px 140px;
       color: #fff;
       background:
         linear-gradient(180deg, rgba(15,30,18,.55) 0%, rgba(15,30,18,.30) 45%, rgba(31,61,36,.85) 100%),
@@ -46,34 +63,54 @@
     .hero p { max-width: 480px; font-size: 16px; color: rgba(255,255,255,.9); margin: 0; }
     .loc { display: inline-flex; align-items: center; gap: 7px; font-size: 14px; margin-top: 16px; color: rgba(255,255,255,.85); }
 
-    /* ---------- env panels (booking widgets) ---------- */
-    .booking { max-width: 1080px; margin: -90px auto 0; position: relative; z-index: 4; padding: 0 32px; display: grid; gap: 22px; }
-    .panel { background: #fff; border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 24px 60px -30px rgba(20,40,22,.45); overflow: hidden; }
-    .panel-head { display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
-    .badge { font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: .08em; color: #fff; padding: 4px 10px; border-radius: 999px; }
-    .badge.dev { background: var(--brand); }
-    .badge.staging { background: var(--slate); }
-    .panel-head .meta { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12px; color: var(--muted); }
-    .panel-head .meta b { color: var(--ink); font-weight: 600; }
-    .widget-frame { width: 100%; height: 500px; border: 0; display: block; background: #fff; }
+    /* ---------- booking card w/ widget ---------- */
+    .booking {
+      max-width: 1080px;
+      margin: -110px auto 0;
+      position: relative; z-index: 4;
+      padding: 0 32px;
+    }
+    .booking-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 24px 60px -30px rgba(20,40,22,.45);
+      padding: 26px 28px 30px;
+    }
+    .booking-card h2 { font-family: var(--serif); font-weight: 500; font-size: 22px; margin: 0 0 4px; }
+    .booking-card .hint { font-size: 13px; color: var(--muted); margin: 0 0 20px; }
+
+    /* widget mount — leave it room, don't fight its own styles */
+    #sentec-booking-widget { min-height: 64px; }
 
     /* ---------- highlights ---------- */
-    .highlights { max-width: 1080px; margin: 64px auto 0; padding: 0 32px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+    .highlights {
+      max-width: 1080px; margin: 64px auto 0; padding: 0 32px;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px;
+    }
     .hl .ico { width: 40px; height: 40px; border-radius: 10px; background: var(--sage); color: var(--brand); display: grid; place-items: center; font-size: 20px; margin-bottom: 12px; }
     .hl h3 { font-family: var(--serif); font-weight: 500; font-size: 17px; margin: 0 0 4px; }
     .hl p { font-size: 13px; color: var(--muted); margin: 0; }
 
+    /* ---------- about ---------- */
+    .about { max-width: 760px; margin: 72px auto 0; padding: 0 32px; text-align: center; }
+    .about .eyebrow { color: var(--brand); }
+    .about h2 { font-family: var(--serif); font-weight: 500; font-size: 30px; margin: 8px 0 14px; color: var(--forest); }
+    .about p { color: var(--muted); font-size: 16px; }
+
     /* ---------- footer ---------- */
-    footer { margin-top: 80px; background: var(--forest); color: rgba(255,255,255,.75); padding: 40px 32px; text-align: center; font-size: 13px; }
+    footer {
+      margin-top: 80px; background: var(--forest); color: rgba(255,255,255,.75);
+      padding: 40px 32px; text-align: center; font-size: 13px;
+    }
     footer .brand { font-family: var(--serif); color: #fff; font-size: 20px; margin-bottom: 10px; }
     footer .tiny { margin-top: 12px; font-size: 11px; color: rgba(255,255,255,.45); }
 
     @media (max-width: 820px) { .highlights { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 520px) {
-      .hero { padding: 52px 20px 110px; }
-      .booking, .highlights { padding-left: 20px; padding-right: 20px; }
+      .hero { padding: 56px 20px 130px; }
+      .booking, .highlights, .about { padding-left: 20px; padding-right: 20px; }
       .highlights { grid-template-columns: 1fr; }
-      .widget-frame { height: 560px; }
     }
   </style>
 </head>
@@ -88,20 +125,12 @@
     </div>
   </header>
 
-  <!-- ===== Two environments, each isolated in its own iframe ===== -->
+  <!-- ===== Booking widget lives here, as the site's search bar ===== -->
   <section class="booking">
-    <div class="panel">
-      <div class="panel-head">
-        <span class="badge dev">DEV</span>
-      </div>
-      <iframe class="widget-frame" id="frame-dev" title="DEV booking widget"></iframe>
-    </div>
-
-    <div class="panel">
-      <div class="panel-head">
-        <span class="badge staging">STAGING</span>
-      </div>
-      <iframe class="widget-frame" id="frame-staging" title="STAGING booking widget"></iframe>
+    <div class="booking-card">
+      <h2>Check availability</h2>
+      <p class="hint">Select your dates to see live rates and reserve your stay.</p>
+      <div id="sentec-booking-widget"></div>
     </div>
   </section>
 
@@ -112,75 +141,19 @@
     <div class="hl"><div class="ico">✦</div><h3>Duis aute irure</h3><p>Dolor in reprehenderit voluptate.</p></div>
   </section>
 
+  <section class="about">
+    <div class="eyebrow">Lorem ipsum</div>
+    <h2>Dolor sit amet consectetur</h2>
+    <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Ut enim ad minim veniam, quis nostrud exercitation.</p>
+  </section>
+
   <footer>
     <div class="brand">Lorem Ipsum<span style="color:var(--gold)">.</span></div>
     <div>123 Placeholder Street, Consectetur City · +00 000 000 000</div>
     <div class="tiny">Demo template for booking widget integration testing. Not a real property.</div>
   </footer>
 
-  <!-- ================================================================= -->
-  <!-- Widget snippets (verbatim). These live inside <template> so they  -->
-  <!-- do NOT run on this page; each is injected into its own iframe.    -->
-  <!-- ================================================================= -->
-
-  <!-- DEV snippet (onSearch modified: opens destination in a new tab) -->
-  <template id="snippet-dev">
-    <div id="sentec-booking-widget"></div>
-    <script>
-      window.$sentec = {
-        bookingWidgetConfig: {
-          propertyId: "UWZH7EJUSWF84Y",
-          apiBaseUrl: "https://api.d313ummlccof4f.cloudfront.net/sm/property/{propertyId}",
-          disablePropertyQueryParams: true,
-          layout: "horizontal",
-          primaryColor: "#357a2a",
-          ctaText: "Let's Book Now",
-          hidePromoCode: true,
-          currency: "IDR",
-          onSearch: function(params, context) {
-            // Open in a NEW TAB — the booking site can't be loaded inside an iframe (X-Frame-Options).
-            // NOTE: original bare context.redirect() defaulted to booking.sentec.io (PROD). Confirm the intended DEV target.
-            window.open("https://dev.booking.sentec.io/hotel/UWZH7EJUSWF84Y/rooms", "_blank", "noopener");
-          },
-        }
-      };
-    </script>
-    <script src="https://files.booking.sentineltech.com/booking-widget/dist/latest/booking-widget.iife.js"></script>
-  </template>
-
-  <!-- STAGING snippet (onSearch modified: opens destination in a new tab) -->
-  <template id="snippet-staging">
-    <div id="sentec-booking-widget"></div>
-    <script>
-      window.$sentec = {
-        bookingWidgetConfig: {
-          propertyId: "8F5CQWLW7MDGSV",
-          apiBaseUrl: "https://staging.api.booking.sentec.io/sm/property/{propertyId}",
-          disablePropertyQueryParams: true,
-          primaryColor: "#373b44",
-          currency: "IDR",
-          onSearch: function(params, context) {
-            // Open in a NEW TAB — the booking site can't be loaded inside an iframe (X-Frame-Options).
-            window.open("https://staging.booking.sentec.io/hotel/8F5CQWLW7MDGSV/rooms", "_blank", "noopener");
-          },
-        }
-      };
-    </script>
-    <script src="https://files.booking.sentineltech.com/booking-widget/dist/latest/booking-widget.iife.js"></script>
-  </template>
-
-  <script>
-    // Inject each snippet into an isolated iframe so both env configs coexist.
-    function mountWidget(templateId, frameId) {
-      var inner = document.getElementById(templateId).innerHTML;
-      var doc = '<!doctype html><html lang="en"><head><meta charset="utf-8">'
-              + '<meta name="viewport" content="width=device-width,initial-scale=1">'
-              + '<style>html,body{margin:0}body{font-family:system-ui,-apple-system,sans-serif;padding:18px;background:#fff}</style>'
-              + '</head><body>' + inner + '</body></html>';
-      document.getElementById(frameId).srcdoc = doc;
-    }
-    mountWidget("snippet-dev", "frame-dev");
-    mountWidget("snippet-staging", "frame-staging");
-  </script>
+  <!-- ===================== WIDGET LOADER (your snippet, unchanged) ===================== -->
+  <script src="https://files.booking.sentineltech.com/booking-widget/dist/latest/booking-widget.iife.js"></script>
 </body>
 </html>
