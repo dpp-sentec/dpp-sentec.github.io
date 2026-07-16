@@ -24,6 +24,21 @@
   };
 </script>
 
+<script>
+  window.$sentec = {
+    bookingWidgetConfig: {
+      propertyId: "8F5CQWLW7MDGSV",
+      apiBaseUrl: "https://staging.api.booking.sentec.io/sm/property/{propertyId}",
+      disablePropertyQueryParams: true,
+      primaryColor: "#373b44",
+      currency: "IDR",
+      onSearch: function(params, context) {
+        context.redirect("https://staging.booking.sentec.io/hotel/8F5CQWLW7MDGSV/rooms");
+      },
+    }
+  };
+</script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -127,8 +142,13 @@
 
   <!-- ===== Booking widget lives here, as the site's search bar ===== -->
   <section class="booking">
-    <div class="booking-card">
-      <h2>Check availability</h2>
+    <div class="booking-card-dev">
+      <h2>Check availability (DEV)</h2>
+      <p class="hint">Select your dates to see live rates and reserve your stay.</p>
+      <div id="sentec-booking-widget"></div>
+    </div>
+    <div class="booking-card-staging">
+      <h2>Check availability (STAGING)</h2>
       <p class="hint">Select your dates to see live rates and reserve your stay.</p>
       <div id="sentec-booking-widget"></div>
     </div>
