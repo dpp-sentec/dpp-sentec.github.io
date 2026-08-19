@@ -10,13 +10,15 @@
 <script>
   window.$sentec = {
     bookingWidgetConfig: {
-      propertyId: "25XQWEB9LDEBF8",
-      apiBaseUrl: "https://api.booking.sentec.io/sm/property/{propertyId}",
+      propertyId: "7FMNDWDBP7EJ5V",
+      apiBaseUrl: "https://staging.api.booking.sentec.io/sm/property/{propertyId}",
       disablePropertyQueryParams: true,
-      primaryColor: "#000000",
-      currency: "EUR",
+      layout: "horizontal",
+      primaryColor: "#11af00",
+      language: "tl-PH",
+      currency: "PHP",
       onSearch: function(params, context) {
-        context.redirect("https://booking.sentec.io/hotel/25XQWEB9LDEBF8/rooms");
+        context.redirect("https://staging.booking.sentec.io/hotel/7FMNDWDBP7EJ5V/rooms");
       },
     }
   };
