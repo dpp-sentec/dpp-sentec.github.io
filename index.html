@@ -10,15 +10,14 @@
 <script>
   window.$sentec = {
     bookingWidgetConfig: {
-      propertyId: "7FMNDWDBP7EJ5V",
-      apiBaseUrl: "https://staging.api.booking.sentec.io/sm/property/{propertyId}",
+      propertyId: "QS5J7552CKXMNV",
+      apiBaseUrl: "https://api.booking.sentec.io/sm/property/{propertyId}",
       disablePropertyQueryParams: true,
-      layout: "horizontal",
-      primaryColor: "#11af00",
-      language: "tl-PH",
-      currency: "PHP",
+      primaryColor: "#80008d",
+      language: "en-US",
+      currency: "EUR",
       onSearch: function(params, context) {
-        context.redirect("https://staging.booking.sentec.io/hotel/7FMNDWDBP7EJ5V/rooms");
+        context.redirect("https://booking.astonhotelsinternational.com/hotel/QS5J7552CKXMNV/rooms", true);
       },
     }
   };
